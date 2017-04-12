@@ -38,13 +38,13 @@ the CafeHub project:
 .. code-block:: python
     
     import json
+    import os
 
     from cafe.engine.http.client import BaseHTTPClient
 
-
+    os.environ['CAFE_ENGINE_CONFIG_FILE_PATH']='.'
     client = BaseHTTPClient()
-    response = client.get('https://api.github.com/orgs/cafehub/repos')
-    print response.status_code
+    response = client.get('https://api.github.com/repos/cafehub/opencafe/issues/42')
     print json.dumps(response.json(), indent=2)
 
 This will generate some warnings that we will address later, but the outcome
@@ -52,102 +52,72 @@ should be similar to the following:
 
 .. code-block:: bash
 
-    200
-    [
-        {
-            "issues_url": "https://api.github.com/repos/CafeHub/opencafe/issues{/number}",
-            "deployments_url": "https://api.github.com/repos/CafeHub/opencafe/deployments",
-            "stargazers_count": 0,
-            "forks_url": "https://api.github.com/repos/CafeHub/opencafe/forks",
-            "mirror_url": null,
-            "subscription_url": "https://api.github.com/repos/CafeHub/opencafe/subscription",
-            "notifications_url": "https://api.github.com/repos/CafeHub/opencafe/notifications{?since,all,participating}",
-            "collaborators_url": "https://api.github.com/repos/CafeHub/opencafe/collaborators{/collaborator}",
-            "updated_at": "2017-03-06T20:16:40Z",
-            "private": false,
-            "pulls_url": "https://api.github.com/repos/CafeHub/opencafe/pulls{/number}",
-            "issue_comment_url": "https://api.github.com/repos/CafeHub/opencafe/issues/comments{/number}",
-            "labels_url": "https://api.github.com/repos/CafeHub/opencafe/labels{/name}",
-            "has_wiki": false,
-            "full_name": "CafeHub/opencafe",
-            "owner": {
-                "following_url": "https://api.github.com/users/CafeHub/following{/other_user}",
-                "events_url": "https://api.github.com/users/CafeHub/events{/privacy}",
-                "organizations_url": "https://api.github.com/users/CafeHub/orgs",
-                "url": "https://api.github.com/users/CafeHub",
-                "gists_url": "https://api.github.com/users/CafeHub/gists{/gist_id}",
-                "html_url": "https://github.com/CafeHub",
-                "subscriptions_url": "https://api.github.com/users/CafeHub/subscriptions",
-                "avatar_url": "https://avatars3.githubusercontent.com/u/6557140?v=3",
-                "repos_url": "https://api.github.com/users/CafeHub/repos",
-                "received_events_url": "https://api.github.com/users/CafeHub/received_events",
-                "gravatar_id": "",
-                "starred_url": "https://api.github.com/users/CafeHub/starred{/owner}{/repo}",
-                "site_admin": false,
-                "login": "CafeHub",
-                "type": "Organization",
-                "id": 6557140,
-                "followers_url": "https://api.github.com/users/CafeHub/followers"
-            },
-            "statuses_url": "https://api.github.com/repos/CafeHub/opencafe/statuses/{sha}",
-            "id": 16419963,
-            "keys_url": "https://api.github.com/repos/CafeHub/opencafe/keys{/key_id}",
-            "description": "This is a mirror of https://github.com/stackforge/opencafe",
-            "tags_url": "https://api.github.com/repos/CafeHub/opencafe/tags",
-            "downloads_url": "https://api.github.com/repos/CafeHub/opencafe/downloads",
-            "assignees_url": "https://api.github.com/repos/CafeHub/opencafe/assignees{/user}",
-            "contents_url": "https://api.github.com/repos/CafeHub/opencafe/contents/{+path}",
-            "has_pages": false,
-            "git_refs_url": "https://api.github.com/repos/CafeHub/opencafe/git/refs{/sha}",
-            "open_issues_count": 21,
-            "clone_url": "https://github.com/CafeHub/opencafe.git",
-            "watchers_count": 0,
-            "git_tags_url": "https://api.github.com/repos/CafeHub/opencafe/git/tags{/sha}",
-            "milestones_url": "https://api.github.com/repos/CafeHub/opencafe/milestones{/number}",
-            "languages_url": "https://api.github.com/repos/CafeHub/opencafe/languages",
-            "size": 753,
-            "homepage": "",
-            "fork": true,
-            "commits_url": "https://api.github.com/repos/CafeHub/opencafe/commits{/sha}",
-            "releases_url": "https://api.github.com/repos/CafeHub/opencafe/releases{/id}",
-            "issue_events_url": "https://api.github.com/repos/CafeHub/opencafe/issues/events{/number}",
-            "archive_url": "https://api.github.com/repos/CafeHub/opencafe/{archive_format}{/ref}",
-            "comments_url": "https://api.github.com/repos/CafeHub/opencafe/comments{/number}",
-            "events_url": "https://api.github.com/repos/CafeHub/opencafe/events",
-            "contributors_url": "https://api.github.com/repos/CafeHub/opencafe/contributors",
-            "html_url": "https://github.com/CafeHub/opencafe",
-            "forks": 3,
-            "compare_url": "https://api.github.com/repos/CafeHub/opencafe/compare/{base}...{head}",
-            "open_issues": 21,
-            "git_url": "git://github.com/CafeHub/opencafe.git",
-            "svn_url": "https://github.com/CafeHub/opencafe",
-            "merges_url": "https://api.github.com/repos/CafeHub/opencafe/merges",
-            "has_issues": true,
-            "ssh_url": "git@github.com:CafeHub/opencafe.git",
-            "blobs_url": "https://api.github.com/repos/CafeHub/opencafe/git/blobs{/sha}",
-            "git_commits_url": "https://api.github.com/repos/CafeHub/opencafe/git/commits{/sha}",
-            "hooks_url": "https://api.github.com/repos/CafeHub/opencafe/hooks",
-            "has_downloads": false,
-            "watchers": 0,
-            "name": "opencafe",
-            "language": "Python",
-            "url": "https://api.github.com/repos/CafeHub/opencafe",
-            "created_at": "2014-01-31T20:35:38Z",
-            "pushed_at": "2017-03-15T18:07:14Z",
-            "forks_count": 3,
-            "default_branch": "master",
-            "teams_url": "https://api.github.com/repos/CafeHub/opencafe/teams",
-            "trees_url": "https://api.github.com/repos/CafeHub/opencafe/git/trees{/sha}",
-            "branches_url": "https://api.github.com/repos/CafeHub/opencafe/branches{/branch}",
-            "subscribers_url": "https://api.github.com/repos/CafeHub/opencafe/subscribers",
-            "permissions": {
-            "admin": false,
-            "push": false,
-            "pull": true
-            },
-            "stargazers_url": "https://api.github.com/repos/CafeHub/opencafe/stargazers"
-        }
-    ]
+    {
+        "labels": [],
+        "number": 42,
+        "assignee": null,
+        "repository_url": "https://api.github.com/repos/CafeHub/opencafe",
+        "closed_at": "2017-02-28T16:32:28Z",
+        "id": 210568122,
+        "title": "Adds a Travis CI config to run tox",
+        "pull_request": {
+            "url": "https://api.github.com/repos/CafeHub/opencafe/pulls/42",
+            "diff_url": "https://github.com/CafeHub/opencafe/pull/42.diff",
+            "html_url": "https://github.com/CafeHub/opencafe/pull/42",
+            "patch_url": "https://github.com/CafeHub/opencafe/pull/42.patch"
+        },
+        "comments": 0,
+        "state": "closed",
+        "body": "",
+        "labels_url": "https://api.github.com/repos/CafeHub/opencafe/issues/42/labels{/name}",
+        "events_url": "https://api.github.com/repos/CafeHub/opencafe/issues/42/events",
+        "comments_url": "https://api.github.com/repos/CafeHub/opencafe/issues/42/comments",
+        "html_url": "https://github.com/CafeHub/opencafe/pull/42",
+        "updated_at": "2017-02-28T16:32:28Z",
+        "user": {
+            "following_url": "https://api.github.com/users/dwalleck/following{/other_user}",
+            "events_url": "https://api.github.com/users/dwalleck/events{/privacy}",
+            "organizations_url": "https://api.github.com/users/dwalleck/orgs",
+            "url": "https://api.github.com/users/dwalleck",
+            "gists_url": "https://api.github.com/users/dwalleck/gists{/gist_id}",
+            "html_url": "https://github.com/dwalleck",
+            "subscriptions_url": "https://api.github.com/users/dwalleck/subscriptions",
+            "avatar_url": "https://avatars2.githubusercontent.com/u/843116?v=3",
+            "repos_url": "https://api.github.com/users/dwalleck/repos",
+            "received_events_url": "https://api.github.com/users/dwalleck/received_events",
+            "gravatar_id": "",
+            "starred_url": "https://api.github.com/users/dwalleck/starred{/owner}{/repo}",
+            "site_admin": false,
+            "login": "dwalleck",
+            "type": "User",
+            "id": 843116,
+            "followers_url": "https://api.github.com/users/dwalleck/followers"
+        },
+        "milestone": null,
+        "closed_by": {
+            "following_url": "https://api.github.com/users/jidar/following{/other_user}",
+            "events_url": "https://api.github.com/users/jidar/events{/privacy}",
+            "organizations_url": "https://api.github.com/users/jidar/orgs",
+            "url": "https://api.github.com/users/jidar",
+            "gists_url": "https://api.github.com/users/jidar/gists{/gist_id}",
+            "html_url": "https://github.com/jidar",
+            "subscriptions_url": "https://api.github.com/users/jidar/subscriptions",
+            "avatar_url": "https://avatars2.githubusercontent.com/u/1134139?v=3",
+            "repos_url": "https://api.github.com/users/jidar/repos",
+            "received_events_url": "https://api.github.com/users/jidar/received_events",
+            "gravatar_id": "",
+            "starred_url": "https://api.github.com/users/jidar/starred{/owner}{/repo}",
+            "site_admin": false,
+            "login": "jidar",
+            "type": "User",
+            "id": 1134139,
+            "followers_url": "https://api.github.com/users/jidar/followers"
+        },
+        "locked": false,
+        "url": "https://api.github.com/repos/CafeHub/opencafe/issues/42",
+        "created_at": "2017-02-27T18:34:21Z",
+        "assignees": []
+    }
 
 The BaseHTTPClient simply passes the response back as ``requests`` would, so we
 can treat the response similarly to view its content. At this point, it
