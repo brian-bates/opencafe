@@ -25,15 +25,14 @@ Making HTTP Requests
 As an example, lets write a few tests for the GitHub API. Let's assume that we
 don't have language bindings or SDKs for our API. We can create a simple
 client using the BaseHTTPClient class provided by the OpenCafe HTTP plugin, which
-is a lightweight wrapper for the `requests` package. First, we'll need to
-install the http plugin:
+is a lightweight wrapper for the ``requests`` package. First, we'll need to
+install the HTTP plugin:
 
 .. code-block:: bash
 
     cafe-config plugin install http
 
-Now we can create a simple script to request a list of the repositories in
-the CafeHub project:
+Now we can create a simple script to request the details of a GitHub issue:
 
 .. code-block:: python
     
@@ -41,6 +40,7 @@ the CafeHub project:
     import os
 
     from cafe.engine.http.client import BaseHTTPClient
+
 
     os.environ['CAFE_ENGINE_CONFIG_FILE_PATH']='.'
     client = BaseHTTPClient()
@@ -121,9 +121,9 @@ should be similar to the following:
 
 The BaseHTTPClient simply passes the response back as ``requests`` would, so we
 can treat the response similarly to view its content. At this point, it
-doesn't look like the http plugin is adding any more value than ``requests``
-would. Let's see what we can do about that. First, let's enable logging and
-see what happens.
+doesn't look like the OpenCafe HTTP plugin is adding any more value than
+``requests`` would. Let's see what we can do about that. First, let's enable
+logging and see what happens.
 
 .. code-block:: python
 
@@ -142,7 +142,7 @@ see what happens.
     root_log.setLevel(logging.DEBUG)
 
     client = BaseHTTPClient()
-    response = client.get('https://api.github.com/orgs/cafehub/repos')
+    response = client.get('https://api.github.com/repos/cafehub/opencafe/issues/42')
 
 With logging enabled, lets execute our script again to see the difference.
 
@@ -173,10 +173,10 @@ With logging enabled, lets execute our script again to see the difference.
     response body....: [{"sha":"6cf95ff563fe136ff90e3a39c0f78f4d6abd3318","commit":{"author":{"name":"Daryl Walleck","email":"daryl.walleck@rackspace.com","date":"2017-03-15T18:07:14Z"},"committer":{"name":"Jose Idar","email":"joseidar@gmail.com","date":"2017-03-15T18:07:14Z"},"message":"Replaces the Gerrit workflow docs with the Github (#44)\n\nworkflow. Addresses issue #40.","tree":{"sha":"2d9205fa5e774f27f30e5e150cfea53a08e851db","url":"https://api.github.com/repos/CafeHub/opencafe/git/trees/2d9205fa5e774f27f30e5e150cfea53a08e851db"},"url":"https://api.github.com/repos/CafeHub/opencafe/git/commits/6cf95ff563fe136ff90e3a39c0f78f4d6abd3318","comment_count":0},"url":"https://api.github.com/repos/CafeHub/opencafe/commits/6cf95ff563fe136ff90e3a39c0f78f4d6abd3318","html_url":"https://github.com/CafeHub/opencafe/commit/6cf95ff563fe136ff90e3a39c0f78f4d6abd3318","comments_url":"https://api.github.com/repos/CafeHub/opencafe/commits/6cf95ff563fe136ff90e3a39c0f78f4d6abd3318/comments","author":{"login":"dwalleck","id":843116,"avatar_url":"https://avatars2.githubusercontent.com/u/843116?v=3","gravatar_id":"","url":"https://api.github.com/users/dwalleck","html_url":"https://github.com/dwalleck","followers_url":"https://api.github.com/users/dwalleck/followers","following_url":"https://api.github.com/users/dwalleck/following{/other_user}","gists_url":"https://api.github.com/users/dwalleck/gists{/gist_id}","starred_url":"https://api.github.com/users/dwalleck/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/dwalleck/subscriptions","organizations_url":"https://api.github.com/users/dwalleck/orgs","repos_url":"https://api.github.com/users/dwalleck/repos","events_url":"https://api.github.com/users/dwalleck/events{/privacy}","received_events_url":"https://api.github.com/users/dwalleck/received_events","type":"User","site_admin":false},"committer":{"login":"jidar","id":1134139,"avatar_url":"https://avatars2.githubusercontent.com/u/1134139?v=3","gravatar_id":"","url":"https://api.github.com/users/jidar","html_url":"https://github.com/jidar","followers_url":"https://api.github.com/users/jidar/followers","following_url":"https://api.github.com/users/jidar/following{/other_user}","gists_url":"https://api.github.com/users/jidar/gists{/gist_id}","starred_url":"https://api.github.com/users/jidar/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/jidar/subscriptions","organizations_url":"https://api.github.com/users/jidar/orgs","repos_url":"https://api.github.com/users/jidar/repos","events_url":"https://api.github.com/users/jidar/events{/privacy}","received_events_url":"https://api.github.com/users/jidar/received_events","type":"User","site_admin":false},"parents":[{"sha":"61a61f4dccff320d9d29e2d512d8c17fa11d2d71","url":"https://api.github.com/repos/CafeHub/opencafe/commits/61a61f4dccff320d9d29e2d512d8c17fa11d2d71","html_url":"https://github.com/CafeHub/opencafe/commit/61a61f4dccff320d9d29e2d512d8c17fa11d2d71"}]}]
     -------------------------------------------------------------------------------
 
-That's a little better. We get a verbose log entry for the request made and the
-response we received.  The output from the HTTP client is meant to be human
-readable and to create an audit trail of what occurred while a test or script
-is executed.
+That's a little better. We get a verbose log entry for the details of request
+made and the response we received.  The output from the HTTP client is meant
+to be human readable and to create an audit trail of what occurred while a
+test or script was executed.
 
 Creating a Basic Application Client
 ===================================
@@ -193,20 +193,23 @@ Now let's add a few more requests to our script:
     from cafe.engine.http.client import BaseHTTPClient
     from cafe.common.reporting import cclogging
 
+
     os.environ['CAFE_ENGINE_CONFIG_FILE_PATH']='.'
     cclogging.init_root_log_handler()
     root_log = logging.getLogger()
     root_log.addHandler(logging.StreamHandler(stream=sys.stderr))
     root_log.setLevel(logging.DEBUG)
 
+
     client = BaseHTTPClient()
-    response = client.get('https://api.github.com/repos/cafehub/opencafe/commits?per_page=1')
-    response = client.get('https://api.github.com/repos/cafehub/opencafe/issues?per_page=1')
-    response = client.get('https://api.github.com/repos/cafehub/opencafe/forks?per_page=1')
+    response = client.get('https://api.github.com/repos/cafehub/opencafe/issues/42')
+    response = client.get('https://api.github.com/repos/cafehub/opencafe/commits')
+    response = client.get('https://api.github.com/repos/cafehub/opencafe/forks')
 
 As we make more requests, a few concerns come to mind. Right now we are
 hard-coding the base url (https://api.github.com) in each request. At the very
-least, we should factor what is likely to change out of our requests:
+least, we should factor out what is common between the requests and what is
+likely to change as we grow this script:
 
 .. code:: python
 
@@ -218,6 +221,7 @@ least, we should factor what is likely to change out of our requests:
     from cafe.engine.http.client import BaseHTTPClient
     from cafe.common.reporting import cclogging
 
+
     os.environ['CAFE_ENGINE_CONFIG_FILE_PATH']='.'
     cclogging.init_root_log_handler()
     root_log = logging.getLogger()
@@ -225,21 +229,22 @@ least, we should factor what is likely to change out of our requests:
     root_log.setLevel(logging.DEBUG)
 
     client = BaseHTTPClient()
-
     base_url = 'https://api.github.com'
     organization = 'cafehub'
     project = 'opencafe'
+    issue_id = 42
 
     response = client.get(
-        '{base_url}/repos/{org}/{project}/commits?per_page=1'.format(
+        '{base_url}/repos/{org}/{project}/commits'.format(
             base_url=base_url, org=organization, project=project))
 
     response = client.get(
-        '{base_url}/repos/{org}/{project}/issues?per_page=1'.format(
-            base_url=base_url, org=organization, project=project))
+        '{base_url}/repos/{org}/{project}/issues/{issue_id}'.format(
+            base_url=base_url, org=organization, project=project,
+            issue_id=issue_id))
 
     response = client.get(
-        '{base_url}/repos/{org}/{project}/forks?per_page=1'.format(
+        '{base_url}/repos/{org}/{project}/forks'.format(
             base_url=base_url, org=organization, project=project))
 
 The GitHub API is expansive, so we could go on for some time defining more
@@ -257,27 +262,29 @@ common class or module would make more sense.
     from cafe.engine.http.client import BaseHTTPClient
     from cafe.common.reporting import cclogging
 
-    class GitHubClient(BaseClient):
+
+    class GitHubClient(BaseHTTPClient):
 
         def __init__(self, base_url):
+            super(GitHubClient, self).__init__()
             self.base_url = base_url
-            self.client = BaseHTTPClient()
         
         def get_project_commits(self, org_name, project_name):
-            return self.client.get(
-                '{base_url}/repos/{org}/{project}/commits?per_page=1'.format(
-                    base_url=self.base_url, org=organization, project=project))
+            return self.get(
+                '{base_url}/repos/{org}/{project}/commits'.format(
+                    base_url=base_url, org=org_name, project=project))
         
-        def get_project_issues(self, org_name, project_name):
-            return self.client.get(
-                '{base_url}/repos/{org}/{project}/commits?per_page=1'.format(
-                    base_url=self.base_url, org=organization, project=project))
+        def get_issue_by_id(self, org_name, project_name, issue_id):
+            return self.get(
+                '{base_url}/repos/{org}/{project}/issues/{issue_id}'.format(
+                    base_url=base_url, org=org_name, project=project,
+                    issue_id=issue_id))
         
         def get_project_forks(self, org_name, project_name):
-            return self.client.get(
-                '{base_url}/repos/{org}/{project}/commits?per_page=1'.format(
-                    base_url=self.base_url, org=organization, project=project))
-    
+            return self.get(
+                '{base_url}/repos/{org}/{project}/forks'.format(
+                    base_url=base_url, org=org_name, project=project))
+
     os.environ['CAFE_ENGINE_CONFIG_FILE_PATH']='.'
     cclogging.init_root_log_handler()
     root_log = logging.getLogger()
@@ -287,17 +294,18 @@ common class or module would make more sense.
     base_url = 'https://api.github.com'
     organization = 'cafehub'
     project = 'opencafe'
+    issue_id = 42
     client = GitHubClient(base_url)
-    
+
     resp1 = client.get_project_commits(org_name=organization, project_name=project)
-    resp2 = client.get_project_issues(org_name=organization, project_name=project)
+    resp2 = client.get_issue_by_id(org_name=organization, project_name=project, issue_id=issue_id)
     resp3 = client.get_project_forks(org_name=organization, project_name=project) 
 
 Now that our HTTP requests are in better shape, let's talk about dealing with
 the responses. The response object has a `json` method that will transform the
 body of the response into a Python dictionary. While treating the response content as a dictionary is good enough for
-quick scripts and possibly for very stable APIs, it scales poorly
-when dealing with large APIs or APIs that are in development.
+quick scripts and possibly for very stable APIs, it scales poorly when dealing
+with large APIs or APIs that are in development.
 
 Accessing the response as a dictionary isn't too difficult when a response body
 has one or two properties, but let's jump back to the first response output we
@@ -362,8 +370,10 @@ request would look like:
             assignees = []
             for assignee in resp_dict.get('assignees'):
                 assignees.append(User(**assignee))
-
-            assignee = User(**resp_dict.get('assignee'))
+            
+            assignee = None
+            if resp_dict.get('assignee'):
+                assignee = User(**resp_dict.get('assignee'))
 
             labels = []
             for label in labels:
@@ -445,13 +455,13 @@ to implement the _json_to_obj method, _obj_to_json method, or both. This
 depends on whether the model is being used to handle requests, responses,
 or both.
 
-This example requires quite a bit of boilerplate code. However, because
-these objects are explicitly defined, static analysis tools will be able to
-assist us going forward. We also wanted to use this simple, explict way for
-this demo so it would be easier to understand. In more practical
-implementations, you may want to take advantage of Python's dynamic nature to
-simplify the setting of properties.
-
+This example requires quite a bit of boilerplate code. We used an explicit
+example so that it would be easy to understand what this code does. However,
+because these objects are explicitly defined, static analysis tools will be
+able to assist us going forward. It also allows code editors that support
+Python autocompletion to work with our models. In more practical
+implementations, you may want to take advantage of Python's dynamic
+nature to simplify the setting of properties.
 
 Writing an Auto-Serializing Client
 ==================================
@@ -470,8 +480,7 @@ Now that we have response models, we can refactor our client to use them.
                 serialize_format='json', deserialize_format='json')
             self.base_url = base_url
             
-        def get_project_issue(self, org_name, project_name, issue_id):
-                
+        def get_issue_by_id(self, org_name, project_name, issue_id):
             url = '{base_url}/repos/{org}/{project}/issues/{issue_id}'.format(
                 base_url=self.base_url, org=organization, project=project,
                 issue_id=issue_id)
@@ -540,7 +549,7 @@ example:
     base_url = https://api.github.com
     organization = cafehub
     project = opencafe
-    issue_id = 40
+    issue_id = 42
 
 Writing and Running a Test
 ==========================
