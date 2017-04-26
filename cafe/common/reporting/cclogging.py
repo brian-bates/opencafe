@@ -11,9 +11,10 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import sys
 import logging
 import os
+import six
+import sys
 
 # When raising warnings in the module, only print them once, and don't
 # show any line numbers or stacktraces (simply print the messages to stderr)
@@ -190,8 +191,8 @@ def log_info_block(
         return
 
     separator = str(separator or "{0}".format('=' * 56))
-    max_length = \
-        len(max([k for k in list(info.keys()) if info.get(k)], key=len)) + 3
+    max_length = len(
+        max([k for k, v in six.iteritems(info) if v], key=len)) + 3
 
     output.append(separator)
     if heading:

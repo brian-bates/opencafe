@@ -240,29 +240,28 @@ class HTTPClient(BaseHTTPClient):
             requestslib_kwargs=None):
 
         # set requestslib_kwargs to an empty dict if None
-        requestslib_kwargs = requestslib_kwargs if (
-            requestslib_kwargs is not None) else {}
+        requestslib_kwargs = requestslib_kwargs or {}
 
         # Set defaults
-        params = params if params is not None else {}
+        params = params or {}
         verify = False
 
         # If headers are provided by both, headers "wins" over default_headers
         headers = dict(self.default_headers, **(headers or {}))
 
         # Override url if present in requestslib_kwargs
-        if 'url' in list(requestslib_kwargs.keys()):
+        if 'url' in requestslib_kwargs:
             url = requestslib_kwargs.get('url', None) or url
             del requestslib_kwargs['url']
 
         # Override method if present in requestslib_kwargs
-        if 'method' in list(requestslib_kwargs.keys()):
+        if 'method' in requestslib_kwargs:
             method = requestslib_kwargs.get('method', None) or method
             del requestslib_kwargs['method']
 
         # The requests lib already removes None key/value pairs, but we force
         # it here in case that behavior ever changes
-        for key in list(requestslib_kwargs.keys()):
+        for key in requestslib_kwargs.copy():
             if requestslib_kwargs[key] is None:
                 del requestslib_kwargs[key]
 
@@ -295,8 +294,7 @@ class AutoMarshallingHTTPClient(HTTPClient):
             requestslib_kwargs=None):
 
         # defaults requestslib_kwargs to a dictionary if it is None
-        requestslib_kwargs = requestslib_kwargs if (requestslib_kwargs is not
-                                                    None) else {}
+        requestslib_kwargs = requestslib_kwargs or {}
 
         # set the 'data' parameter of the request to either what's already in
         # requestslib_kwargs, or the deserialized output of the request_entity

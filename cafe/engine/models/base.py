@@ -94,10 +94,10 @@ class XML_ToolsMixin(object):
     @staticmethod
     def _set_xml_etree_element(
             xml_etree, property_dict, exclude_empty_properties=True):
-        '''Sets a dictionary of keys and values as properties of the xml etree
+        """Sets a dictionary of keys and values as properties of the xml etree
         element if value is not None. Optionally, add all keys and values as
         properties if only if exclude_empty_properties == False.
-        '''
+        """
         if exclude_empty_properties:
             property_dict = CommonToolsMixin._remove_empty_values(
                 property_dict)
@@ -146,16 +146,13 @@ class BaseModel(object):
     def __str__(self):
         strng = '<{0} object> {1}'.format(
             type(self).__name__, self.__REPR_SEPARATOR__)
-        for key in list(vars(self).keys()):
-            val = getattr(self, key)
+        for key, val in six.iteritems(vars(self)):
             if isinstance(val, cclogging.logging.Logger):
                 continue
             elif isinstance(val, six.text_type):
-                strng = '{0}{1} = {2}{3}'.format(
-                    strng, key, val.encode("utf-8"), self.__REPR_SEPARATOR__)
-            else:
-                strng = '{0}{1} = {2}{3}'.format(
-                    strng, key, val, self.__REPR_SEPARATOR__)
+                val = val.encode("utf-8")
+            strng = '{0}{1} = {2}{3}'.format(
+                strng, key, val, self.__REPR_SEPARATOR__)
         return '{0}'.format(strng)
 
     def __repr__(self):
