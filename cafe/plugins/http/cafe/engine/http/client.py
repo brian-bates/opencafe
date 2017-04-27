@@ -105,8 +105,7 @@ def _log_transaction(log, level=cclogging.logging.DEBUG):
                 log.error("An exception occured durring logging")
                 log.exception()
 
-            response_header = '\n{0}\nRESPONSE RECEIVED\n{0}\n'.format(
-                '-' * 17)
+            response_header = '\n{0}\nRESPONSE RECEIVED\n{0}\n'.format('-' * 17)
             logline = ''.join([
                 response_header,
                 'response status..: {0}\n'.format(response),
